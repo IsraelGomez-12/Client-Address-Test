@@ -1,0 +1,99 @@
+
+:root {
+    --color-primary: #0871B3;
+    --color-secondary: #066198;
+}
+
+.bg-primary {
+    background-color: var(--color-primary) !important;
+}
+
+.bg-primary-alt {
+    background-color: var(--color-secondary) !important;
+}
+
+.font-weight-400 {
+    font-weight: 400 !important;
+}
+
+.font-weight-500 {
+    font-weight: 500 !important;
+}
+
+.font-weight-600 {
+    font-weight: 400 !important;
+}
+
+.font-weight-700 {
+    font-weight: 500 !important;
+}
+
+.font-weight-800 {
+    font-weight: 400 !important;
+}
+
+.font-weight-900 {
+    font-weight: 500 !important;
+}
+
+.font-size-xs {
+    font-size: 0.75rem !important;
+}
+
+.font-size-sm {
+    font-size: 0.875rem !important;
+}
+
+.font-size-base {
+    font-size: 1rem !important;
+}
+
+.font-size-lg {
+    font-size: 1.125rem !important;
+}
+
+.font-size-xl {
+    font-size: 1.25rem !important;
+}
+
+.font-size-2xl {
+    font-size: 1.5rem !important;
+}
+
+.custom-form-box {
+    border: 3px solid var(--color-primary);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.text-primary-custom {
+    color: var(--color-primary) !important;
+}
+
+.text-primary-alt {
+    color: var(--color-secondary) !important;
+}
+
+.fit-content {
+    width: fit-content !important;
+}
+
+.sidebar-item {
+    align-items: center;
+    min-width: 160px;
+    height: 50px;
+    border: 1px solid #E7ECF2 !important;
+    text-decoration: none;
+    color: #6D8AA8;
+    padding-left: 10px;
+    border-left-width: 4px !important;
+    transition: all ease-out 0.125s;
+}
+
+.sidebar-item:hover {
+    border-left-color: var(--color-primary) !important;
+    color: var(--color-primary) !important;
+}
+
+/*# sourceMappingURL=app.css.map */

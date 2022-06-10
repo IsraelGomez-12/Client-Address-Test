@@ -1,0 +1,104 @@
+﻿@page "/"
+@using FrontOrion.DTO;
+@using System.Collections.ObjectModel;
+@using System.Text.Json;
+@using System.Text;
+@inject HttpClient http;
+
+<div class="d-flex flex-column rounded-3 custom-form-box mt-2">
+    <div class="d-flex mb-3">
+        <div class="d-flex flex-column">
+            <h2 class="h2 font-weight-900 w-100 text-primary-custom ">
+                Registrar Contacto
+            </h2>
+            <h5 class="h5 font-weifht-900 w-100 text-primary-custom">
+                Llene el formulario
+            </h5>
+        </div>
+    </div>
+
+    <form class="d-flex flex-column w-100">
+        <div class="d-flex flex-column mb-2">
+            <label for="">Nombre</label>
+            <input @bind-value="mainFormModel.Name" type="text" class="form-control" placeholder="nombre">
+        </div>
+
+        <button type="button" class="btn btn-primary fit-content mt-2" @onclick="@handleAddAddress">
+            Agregar Direccion
+        </button>
+
+        <p class="mt-4 font-size-lg">Direcciones</p>
+
+        @if(!mainFormModel.Addresses.Any())
+        {
+            <p class="mt-2 ps-3">Favor agregar una direccion</p>
+        }
+
+        @for (int i = 0; i < mainFormModel.Addresses.ToList().Count(); i++)
+        {
+            var index = i;
+
+            <div class="card p-4 mb-5 custom-form-box">
+                <div class="d-flex flex-row justify-content-end align-items-center">
+                    <p class="p-0 m-0 me-1">Direccion @(i + 1)</p> 
+                    <button type="button" @onclick="@(e => handleDeleteAddress(index))" class="btn btn-danger rounded-circle">X</button>
+                </div>
+                <div class="d-flex flex-column my-2">
+                    <label for="">Calle</label>
+                    <input @bind-value="mainFormModel.Addresses[index].Street" type="text" class="form-control" placeholder="nombre">
+                </div>
+
+                <div class="d-flex flex-column my-2">
+                    <label for="">Province</label>
+                    <input @bind-value="mainFormModel.Addresses.ToArray()[index].Province" type="text" class="form-control" placeholder="nombre">
+                </div>
+                <div class="d-flex flex-column my-2">
+                    <label for="">PostCode</label>
+                    <input @bind-value="mainFormModel.Addresses.ToArray()[index].PostCode" type="text" class="form-control" placeholder="nombre">
+                </div>
+                <div class="d-flex flex-column my-2">
+                    <label for="">Reference</label>
+                    <input @bind-value="mainFormModel.Addresses.ToArray()[index].Reference" type="text" class="form-control" placeholder="nombre">
+                </div>
+            </div>
+        }
+
+        <div class="d-flex justify-content-end w-100 mt-4">
+            <button type="button" class="btn btn-primary fit-content mt-2" @onclick="HandleSubmit">
+                Crear Contacto
+            </button>
+        </div>
+    </form>
+</div>
+
+@code {
+    public ClientModel mainFormModel = new ClientModel
+    {
+        Id = Guid.NewGuid(),
+        Name = "alvaro",
+        Addresses = new Collection<AddressModel>(),
+    };
+
+    public void handleAddAddress()
+    {
+        mainFormModel.Addresses.Add(new AddressModel
+        {
+            Id = Guid.NewGuid(),
+            ClientId = mainFormModel.Id,
+            Street = "",
+            Province = "",
+            PostCode = "",
+            Reference = ""
+        });
+    }
+
+    public async Task HandleSubmit()
+    {
+        var response = await http.PostAsync("/Client", new StringContent(JsonSerializer.Serialize(mainFormModel), Encoding.UTF8, "application/json"));
+    }
+
+    public void handleDeleteAddress(int addressIndex)
+    {
+        mainFormModel.Addresses.RemoveAt(addressIndex);
+    }
+}

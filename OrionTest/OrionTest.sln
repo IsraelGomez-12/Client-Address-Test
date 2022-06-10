@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31515.178
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiOrion", "..\ApiOrion\ApiOrion\ApiOrion.csproj", "{22B1E768-6494-4976-B249-9C2D19FC9C6C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FrontOrion", "FrontOrion\FrontOrion.csproj", "{D7814193-6F30-4549-8183-674A5428F386}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{22B1E768-6494-4976-B249-9C2D19FC9C6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22B1E768-6494-4976-B249-9C2D19FC9C6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22B1E768-6494-4976-B249-9C2D19FC9C6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22B1E768-6494-4976-B249-9C2D19FC9C6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7814193-6F30-4549-8183-674A5428F386}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7814193-6F30-4549-8183-674A5428F386}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7814193-6F30-4549-8183-674A5428F386}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7814193-6F30-4549-8183-674A5428F386}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {11C8D268-EC50-4A71-888C-815E8A1ADA14}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,243 @@
+﻿@page "/list"
+@inject HttpClient http;
+@using FrontOrion.DTO;
+@using System.Collections.ObjectModel;
+@using System.Linq;
+@using System.Text.Json;
+@using System.Text;
+
+<div class="d-flex flex-column rounded-3 custom-form-box mt-2">
+
+    @if(!clients.Any())
+    {
+        <div class="d-flex justify-content-center">
+            No hay clients que mostrar
+        </div>
+    }
+
+    @foreach (var client in clients)
+    {
+        <div class="my-2 py-3 border-3 card rounded-4 d-flex flex-row">
+            <p class="m-0 ps-3 pb-0 text-center d-flex justify-content-center align-items-center">@client.Name</p> 
+            <button class="btn btn-danger ms-auto me-3" @onclick="(e => handleDelete(client.Id))">Borrar</button>
+            <button class="btn btn-success me-3" data-bs-toggle="modal" data-bs-target="#modalContainer" @onclick="(e => HandleShowModal(client.Id))">Direcciones</button>
+            <button class="btn btn-warning me-3" data-bs-toggle="modal" data-bs-target="#editContainer" @onclick="(e => HandleShowModal(client.Id))">Editar</button>
+        </div>
+    }
+</div>
+
+<div id="modalContainer" class="modal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Direcciones</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form class="d-flex flex-column">
+            <label for="">Calle</label>
+            <input @bind-value="addressToAdd.Street" type="text" class="form-control mb-2">
+            
+            <label for="">Codigo Postal</label>
+            <input @bind-value="addressToAdd.PostCode" type="text" class="form-control mb-2">
+            
+            <label for="">Provincia</label>
+            <input @bind-value="addressToAdd.Province" type="text" class="form-control mb-2">
+
+            <label for="">Referencia</label>
+            <input @bind-value="addressToAdd.Reference" type="text" class="form-control mb-2">
+
+            <div class="mt-4 d-flex flex-row justify-content-end">
+                <button type="button" class="btn btn-success" @onclick="addAddressToContact">
+                    Agregar
+                </button>
+            </div>
+        </form>
+
+        <hr>
+        @foreach (var address in modalClient.Addresses)
+        {
+            <div class="my-2 py-2 px-3 d-flex card flex-row">
+                <div class="d-flex flex-column">
+                    <p class="m-0 p-0">@address.Street</p>
+                    <p class="m-0 p-0">@address.PostCode</p>
+                    <p class="m-0 p-0">@address.Province</p>
+                    <p class="m-0 p-0">@address.Reference</p>
+                </div>           
+
+                <button class="btn btn-danger ms-auto" @onclick="(e => handleDeleteClientAddress(address.Id))">Borrar</button>     
+            </div>   
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="editContainer" class="modal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Editar Direccion</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form class="d-flex flex-column">
+            <label for="">Calle</label>
+            <input @bind-value="addressToEdit.Street" type="text" class="form-control mb-2">
+            
+            <label for="">Codigo Postal</label>
+            <input @bind-value="addressToEdit.PostCode" type="text" class="form-control mb-2">
+            
+            <label for="">Provincia</label>
+            <input @bind-value="addressToEdit.Province" type="text" class="form-control mb-2">
+
+            <label for="">Referencia</label>
+            <input @bind-value="addressToEdit.Reference" type="text" class="form-control mb-2">
+
+            <div class="mt-4 d-flex flex-row justify-content-end">
+                <button type="button" class="btn btn-success" @onclick="updateSelectedAddress">
+                    Salvar
+                </button>
+            </div>
+        </form>
+
+        <hr>
+        @foreach (var address in modalClient.Addresses)
+        {
+            <div class="my-2 py-2 px-3 d-flex card flex-row">
+                <div class="d-flex flex-column">
+                    <p class="m-0 p-0">@address.Street</p>
+                    <p class="m-0 p-0">@address.PostCode</p>
+                    <p class="m-0 p-0">@address.Province</p>
+                    <p class="m-0 p-0">@address.Reference</p>
+                </div>           
+
+                <button class="btn btn-warning ms-auto" @onclick="(e => updateAddress(address.Id))">Editar</button>     
+            </div>   
+        }
+      </div>
+    </div>
+  </div>
+</div>
+
+
+@code {
+    public Guid EditingAddressId = Guid.Empty;
+    
+    public Collection<ClientModel> clients = new Collection<ClientModel>(){
+        new ClientModel{
+            Id = Guid.NewGuid(),
+            Name = "Some Name",
+            Addresses = new Collection<AddressModel>(){
+                new AddressModel{
+                    Id = Guid.NewGuid(),
+                    Street = "Some Street",
+                    PostCode = "Some Number",
+                    Province = "Some City",
+                    Reference = "Some Country"
+                },
+                      new AddressModel{
+                    Id = Guid.NewGuid(),
+                    Street = "Some Street",
+                    PostCode = "Some Number",
+                    Province = "Some City",
+                    Reference = "Some Country"
+                },
+                      new AddressModel{
+                    Id = Guid.NewGuid(),
+                    Street = "Some Street",
+                    PostCode = "Some Number",
+                    Province = "Some City",
+                    Reference = "Some Country"
+                }
+            }
+        }    
+    };
+
+    public ClientModel modalClient = new ClientModel(){
+        Id = Guid.NewGuid(),
+        Name = "",
+    };
+
+    public AddressModel addressToAdd = new AddressModel(){
+        ClientId = Guid.NewGuid(),
+        Street = "",
+        PostCode = "",
+        Province ="",
+        Reference = ""
+    };
+
+    public AddressModel addressToEdit = new AddressModel(){
+        ClientId = Guid.NewGuid(),
+        Street = "",
+        PostCode = "",
+        Province ="",
+        Reference = ""
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        var request = await http.GetAsync("/Client").ConfigureAwait(true);
+    }
+
+    public async Task handleDelete(Guid id)
+    {
+        var indexToDelete = clients.ToList().FindIndex(client => client.Id == id);
+
+        clients.RemoveAt(indexToDelete);
+
+        var request = await http.DeleteAsync($"/Client?clientId={id}").ConfigureAwait(true);
+    }
+
+    public void HandleShowModal(Guid id)
+    {
+        var clientToFind = clients.ToList().FindIndex(client => client.Id == id);
+
+        modalClient = clients.ElementAt(clientToFind);
+    }
+
+    public void handleDeleteClientAddress(Guid addressId)
+    {
+        var addressToDelete = modalClient.Addresses.ToList().FindIndex(address => address.Id == addressId);
+
+        modalClient.Addresses.RemoveAt(addressToDelete);
+
+        var request = http.DeleteAsync($"/Address?addressId={addressId}").ConfigureAwait(true);
+    }
+
+    public async Task addAddressToContact()
+    {
+        modalClient.Addresses.Add(addressToAdd);
+
+        var response = await http.PostAsync("/Address", new StringContent(JsonSerializer.Serialize(addressToAdd), Encoding.UTF8, "application/json")).ConfigureAwait(true); 
+
+        addressToAdd = new AddressModel(){
+            ClientId = Guid.NewGuid(),
+            Street = "",
+            PostCode = "",
+            Province ="",
+            Reference = ""
+        };
+    }
+
+    public void updateAddress (Guid id)
+    {
+        EditingAddressId = id;
+
+        var indexToEdit = modalClient.Addresses.ToList().FindIndex(address => address.Id == id);
+
+        addressToEdit = modalClient.Addresses.ElementAt(indexToEdit);
+    }
+
+    public async Task updateSelectedAddress() 
+    {
+        if(EditingAddressId == Guid.Empty) return;
+
+        var indexToEdit = modalClient.Addresses.ToList().FindIndex(address => address.Id == EditingAddressId);
+
+        modalClient.Addresses.RemoveAt(indexToEdit);
+        modalClient.Addresses.Insert(indexToEdit, addressToEdit);
+       
+        var response = await http.PutAsync("/Address", new StringContent(JsonSerializer.Serialize(addressToEdit), Encoding.UTF8, "application/json")).ConfigureAwait(true);
+    }
+}

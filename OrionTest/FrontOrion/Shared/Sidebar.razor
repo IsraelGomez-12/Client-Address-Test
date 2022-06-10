@@ -1,0 +1,42 @@
+@using System.Collections.ObjectModel;
+@using FrontOrion.Models;
+
+<article class="d-flex flex-column">
+    @for(int i = 0; i < items.Count(); i++)
+    {
+        <a @onclick="(e => updateActiveRoute(i))" class="d-flex flex-row sidebar-item my-2 @(items[i].IsActive ? "active" : "")" href="@items[i].Url">
+            @items[i].Title
+        </a> 
+    }
+</article>
+
+@code {
+    public Collection<SidebarItem> items = new Collection<SidebarItem>(){
+        new SidebarItem{
+            IsActive = false,
+            Title = "Agregar Contacto",
+            Url = "/",
+        },
+        new SidebarItem{
+            IsActive = false,
+            Title = "Visualizar Contactos",
+            Url = "/list",
+        }
+    };
+
+
+    public void updateActiveRoute(int index)
+    {
+        for(int i = 0; i < items.Count();i++)
+        {
+            if(i == index)
+            {
+                items[i].IsActive = true;
+            }
+            
+        }
+
+        Console.WriteLine(items);
+    }
+    
+}
